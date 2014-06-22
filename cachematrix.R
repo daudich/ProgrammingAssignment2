@@ -1,54 +1,56 @@
-## These functions 
+## In OOP terms, this function(read Class) can be thought of as an extension to the
+## matrix Class interface. It adds functionality to the object by providing
+## the capability to save and retrieve data for frequently computed computations,
+## in this case inversion of the matrix.
 
-## Write a short comment describing this function
-
-makeCacheMatrix <- function(x = matrix()) {
+makeCacheMatrix <- function(originalMatrix = matrix()) {
 
         inverse <- NULL ##initialising the default value for the inverted matrix
         
         ##initialising the value of the matrix that has to be inverted
         set <- function(newMatrix) {
-                x <<- newMatrix
+                originalMatrix <<- newMatrix
                 inverse <<- NULL
         }
         
         ##this method returns the original matix
-        get <- function() x
+        get <- function() originalMatrix
         
         ##setting the value for the inverted matrix
-        setInvMatrix <- function(invMatrx) {
-		inverse <<- invMatrix
+        setInverse <- function(cachedMatrix) {
+		inverse <<- cachedMatrix
 	}
         
         ##this method returns the inverted matrix
-        getInvMatrix <- function() inverse
+        getInverse <- function() inverse
         
         ##listing all the methods available to this function object
         list(set = set, get = get,
-             setInvMatrix = setInvMatrix,
-             getInvMatrix = getInvMatrix)
+             setInverse = setInverse,
+             getInverse = getInverse)
 
 }
 
 
-## Write a short comment describing this function
-
+## This function takes objects of the makeCacheMatrix Class. It provides
+## 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
         
-        m <- x$getmean()
+        ##getting the value from the cached matrix otherwise NULL
+        matrix <- x$getInverse()
         
-        if(!is.null(m)) {
+        ##if there was a cached matrix then returning from function with the value
+        if(!is.null(matrix)) {
                 message("Getting cached matrix.")
-                return(m)
+                return(matrix)
         }
         
-        data <- x$get()
+        data <- x$get() ##getting the matrix to compute
         
-        m <- mean(data, ...)
+        matrix <- solve(data, ...) ##computing the inverse of the matrix
         
-        x$setmean(m)
+        x$setInverse(matrix) ##caching the inverted matrix for future use
         
-        m
+        matrix ##returning the matrix
         
 }
